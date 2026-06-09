@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Corridor Labs — Revenue Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@300;400&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0d0d0d;
+  --ink-2: #141414;
+  --ink-3: #1e1e1e;
+  --line: #272727;
+  --mid: #555;
+  --light: #888;
+  --off: #ddd9d1;
+  --gold: #c4a35a;
+  --gold-dim: #7a6130;
+  --green: #4e8c62;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--off);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 56px;
+  transition: background 0.3s, border-color 0.3s;
+  border-bottom: 1px solid transparent;
+}
+nav.scrolled {
+  background: rgba(13,13,13,0.94);
+  backdrop-filter: blur(16px);
+  border-color: var(--line);
+}
+.logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px; letter-spacing: 0.08em;
+  color: var(--off); text-decoration: none;
+}
+.logo b { color: var(--gold); font-weight: 400; }
+.nav-r { display: flex; align-items: center; gap: 40px; }
+.nav-r a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--light); text-decoration: none; transition: color 0.2s;
+}
+.nav-r a:hover { color: var(--off); }
+.nav-btn {
+  color: var(--ink) !important;
+  background: var(--gold);
+  padding: 10px 22px !important;
+  transition: background 0.2s !important;
+}
+.nav-btn:hover { background: var(--off) !important; }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 0 56px;
+  position: relative; overflow: hidden;
+}
+.hero-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  opacity: 0.15;
+  mask-image: radial-gradient(ellipse 70% 70% at 40% 50%, black 20%, transparent 75%);
+}
+.hero-inner { position: relative; z-index: 2; max-width: 820px; }
+
+h1 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(56px, 7.5vw, 104px);
+  font-weight: 300; line-height: 0.97; letter-spacing: -0.025em;
+  color: var(--off);
+  opacity: 0; animation: up 0.9s 0.1s forwards;
+}
+h1 i { font-style: italic; color: var(--gold); }
+
+.hero-sub {
+  margin-top: 28px;
+  font-size: 18px; color: var(--light); line-height: 1.6;
+  max-width: 480px;
+  opacity: 0; animation: up 0.9s 0.25s forwards;
+}
+
+.hero-cta {
+  margin-top: 44px;
+  opacity: 0; animation: up 0.9s 0.4s forwards;
+}
+.btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink); background: var(--gold);
+  padding: 15px 36px; text-decoration: none; display: inline-block;
+  transition: background 0.2s;
+}
+.btn:hover { background: var(--off); }
+
+/* TICKER / TRUST */
+.ticker {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 15px 56px;
+  display: flex; align-items: center; gap: 14px;
+  overflow: hidden;
+}
+.ticker-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--mid); white-space: nowrap; flex-shrink: 0;
+  padding-right: 14px;
+  border-right: 1px solid var(--line);
+}
+.ticker-items {
+  display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+}
+.ticker-item {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; letter-spacing: 0.04em; color: var(--light);
+}
+.ticker-dot { color: var(--line); font-size: 16px; }
+
+/* SECTIONS */
+section { padding: 88px 56px; border-top: 1px solid var(--line); }
+
+.label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--gold-dim); margin-bottom: 44px;
+  display: flex; align-items: center; gap: 12px;
+}
+.label::before { content: ''; width: 20px; height: 1px; background: var(--gold-dim); display: block; }
+
+h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(34px, 4vw, 52px);
+  font-weight: 300; line-height: 1.08; letter-spacing: -0.02em;
+  color: var(--off);
+}
+h2 i { font-style: italic; color: var(--gold); }
+
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.on { opacity: 1; transform: none; }
+
+/* PROBLEM */
+.problem-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
+.problem-left h2 { margin-bottom: 20px; }
+.problem-left p { font-size: 16px; color: var(--light); line-height: 1.75; max-width: 420px; margin-top: 20px; }
+.symptoms { list-style: none; }
+.sym {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 18px 0; border-bottom: 1px solid var(--line);
+}
+.sym:first-child { border-top: 1px solid var(--line); }
+.sym-x { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #6b3535; margin-top: 2px; flex-shrink: 0; }
+.sym-text strong { display: block; font-weight: 400; color: var(--off); font-size: 15px; margin-bottom: 2px; }
+.sym-text span { font-size: 13px; color: var(--mid); line-height: 1.5; }
+
+/* HOW */
+.how-section { background: var(--ink-2); }
+.how-head { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: end; margin-bottom: 56px; }
+.how-head p { font-size: 16px; color: var(--light); line-height: 1.75; }
+.stages { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; }
+.stage {
+  background: var(--ink-3); padding: 36px 32px;
+  position: relative; transition: background 0.25s;
+}
+.stage::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--line); transition: background 0.25s;
+}
+.stage:hover { background: #222; }
+.stage:hover::after { background: var(--gold); }
+.stage-n { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--gold-dim); margin-bottom: 16px; }
+.stage-name { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 300; color: var(--off); margin-bottom: 16px; }
+.stage-body { font-size: 14px; color: var(--mid); line-height: 1.65; margin-bottom: 24px; }
+.stage-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+.stage-list li {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--light);
+  display: flex; align-items: baseline; gap: 10px;
+}
+.stage-list li::before { content: '—'; color: var(--line); flex-shrink: 0; }
+
+/* BUILDS */
+.builds { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin-top: 56px; }
+.build {
+  background: var(--ink-2); padding: 36px 32px;
+  border: 1px solid var(--line); transition: border-color 0.25s;
+}
+.build:hover { border-color: var(--gold-dim); }
+.build-tag {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gold-dim);
+  margin-bottom: 16px; display: block;
+}
+.build-name { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 300; color: var(--off); margin-bottom: 10px; }
+.build-body { font-size: 13px; color: var(--mid); line-height: 1.65; margin-bottom: 20px; }
+.build-outs { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.build-outs li { font-size: 13px; color: var(--light); display: flex; gap: 10px; align-items: baseline; line-height: 1.4; }
+.build-outs li::before { content: '✓'; color: var(--green); font-size: 11px; flex-shrink: 0; }
+
+/* SOCIAL PROOF */
+.proof-section {}
+.proof-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-top: 56px; }
+.proof-card {
+  background: var(--ink-2); padding: 36px 32px;
+  display: flex; flex-direction: column; gap: 24px;
+}
+.proof-quote {
+  font-family: 'Fraunces', serif; font-style: italic;
+  font-size: 17px; font-weight: 300; line-height: 1.55;
+  color: var(--off);
+}
+.proof-meta { margin-top: auto; }
+.proof-name {
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  letter-spacing: 0.06em; color: var(--off); margin-bottom: 3px;
+}
+.proof-co { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--mid); letter-spacing: 0.04em; }
+.proof-outcome {
+  margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line);
+  font-family: 'JetBrains Mono', monospace; font-size: 11px;
+  color: var(--green); letter-spacing: 0.04em;
+}
+
+/* WHO */
+.who-section {}
+.who-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: start; }
+.who-left h2 { margin-bottom: 20px; }
+.who-left p { font-size: 16px; color: var(--light); line-height: 1.75; margin-bottom: 14px; }
+.fits { list-style: none; }
+.fit {
+  display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center;
+  padding: 18px 0; border-bottom: 1px solid var(--line);
+}
+.fit:first-child { border-top: 1px solid var(--line); }
+.fit-name { font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.06em; color: var(--off); margin-bottom: 3px; }
+.fit-desc { font-size: 12px; color: var(--mid); }
+.fit-tag {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em;
+  color: var(--green); border: 1px solid var(--green); padding: 4px 10px; white-space: nowrap;
+  opacity: 0.7;
+}
+
+/* OWN */
+.own-section { background: var(--ink-2); }
+.own-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; margin-top: 56px; }
+.own-card { background: var(--ink-3); padding: 32px 28px; }
+.own-icon { font-size: 18px; color: var(--gold); margin-bottom: 16px; display: block; }
+.own-title { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 300; color: var(--off); margin-bottom: 8px; }
+.own-body { font-size: 13px; color: var(--mid); line-height: 1.65; }
+
+/* CTA */
+.cta-section {
+  text-align: center; padding: 112px 56px;
+  background: var(--ink-2); position: relative; overflow: hidden;
+}
+.cta-glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(196,163,90,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-section h2 { margin-bottom: 16px; }
+.cta-section p { font-size: 17px; color: var(--light); max-width: 420px; margin: 0 auto 44px; line-height: 1.7; }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--line); padding: 36px 56px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.f-logo { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--mid); letter-spacing: 0.06em; }
+.f-logo b { color: var(--gold); font-weight: 400; }
+.f-links { display: flex; gap: 28px; list-style: none; }
+.f-links a {
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--mid); text-decoration: none; transition: color 0.2s;
+}
+.f-links a:hover { color: var(--off); }
+.f-copy { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #3a3a3a; letter-spacing: 0.04em; }
+
+/* ANIM */
+@keyframes up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* RESPONSIVE */
+@media (max-width: 860px) {
+  nav { padding: 20px 24px; }
+  .nav-r a:not(.nav-btn) { display: none; }
+  .hero { padding: 0 24px; }
+  section { padding: 64px 24px; }
+  .ticker { padding: 14px 24px; }
+  .problem-wrap, .how-head, .who-wrap { grid-template-columns: 1fr; gap: 40px; }
+  .stages, .builds, .proof-grid, .own-grid { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 20px; text-align: center; }
+  .f-links { flex-wrap: wrap; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#" class="logo">CORRIDOR<b>.</b>LABS</a>
+  <div class="nav-r">
+    <a href="#how">How It Works</a>
+    <a href="#proof">Clients</a>
+    <a href="#who">Who It's For</a>
+    <a href="https://cal.com/corridor" class="nav-btn">Book a Sprint Call</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" style="border-top:none;">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <h1>Revenue intelligence.<br><i>Built on your data.</i></h1>
+    <p class="hero-sub">We build the systems your revenue team doesn't have time to build — and run them as your embedded team.</p>
+    <div class="hero-cta">
+      <a href="https://cal.com/corridor" class="btn">Book a Sprint Call</a>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <span class="ticker-label">Built for</span>
+  <div class="ticker-items">
+    <span class="ticker-item">Manufacturers</span>
+    <span class="ticker-dot">·</span>
+    <span class="ticker-item">Industrial Contractors</span>
+    <span class="ticker-dot">·</span>
+    <span class="ticker-item">Freight &amp; 3PL</span>
+    <span class="ticker-dot">·</span>
+    <span class="ticker-item">Engineering Services</span>
+    <span class="ticker-dot">·</span>
+    <span class="ticker-item">Distribution</span>
+    <span class="ticker-dot">·</span>
+    <span class="ticker-item">$10M–$50M B2B</span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section>
+  <div class="problem-wrap reveal">
+    <div class="problem-left">
+      <div class="label">The Problem</div>
+      <h2>Your team is capable.<br>The <i>system</i> isn't.</h2>
+      <p>Mid-market companies at $10–50M rarely lack talent. They lack the infrastructure to make that talent operate at scale — and can't justify a full RevOps team to build it.</p>
+    </div>
+    <div class="problem-right">
+      <ul class="symptoms">
+        <li class="sym">
+          <span class="sym-x">✕</span>
+          <div class="sym-text"><strong>CRM installed, not running</strong><span>HubSpot or Dynamics is live but reps aren't accountable to it. Pipeline is guesswork.</span></div>
+        </li>
+        <li class="sym">
+          <span class="sym-x">✕</span>
+          <div class="sym-text"><strong>One person holds everything</strong><span>Your VP or estimator is the single point of failure across sales, quoting, and delivery.</span></div>
+        </li>
+        <li class="sym">
+          <span class="sym-x">✕</span>
+          <div class="sym-text"><strong>AI in pockets, not the business</strong><span>Your team uses AI individually. It doesn't know your pricing, your wins, or how you actually sell.</span></div>
+        </li>
+        <li class="sym">
+          <span class="sym-x">✕</span>
+          <div class="sym-text"><strong>Proposals take weeks</strong><span>New jobs rebuilt from scratch. Historical wins sitting in folders no one can access at speed.</span></div>
+        </li>
+        <li class="sym">
+          <span class="sym-x">✕</span>
+          <div class="sym-text"><strong>No layer above outbound</strong><span>A vendor runs your sequences. Nothing connects that motion to pipeline, GP, or decisions.</span></div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="how-section" id="how">
+  <div class="how-head reveal">
+    <h2>Three stages.<br><i>One accountable partner.</i></h2>
+    <p>We run as your general contractor for revenue operations. We scope and QA — a specialist bench executes. One relationship, the right trade for every job.</p>
+  </div>
+  <div class="stages reveal">
+    <div class="stage">
+      <div class="stage-n">01 — SPRINT</div>
+      <div class="stage-name">Discovery</div>
+      <div class="stage-body">We map your revenue motion end to end, assess your CRM state, and build the knowledge foundation. Day 10 readout: a working demo on your data and a fixed-scope build proposal.</div>
+      <ul class="stage-list">
+        <li>Revenue operation audit</li>
+        <li>CRM and stack assessment</li>
+        <li>Six core knowledge files</li>
+        <li>Live demo on your data</li>
+      </ul>
+    </div>
+    <div class="stage">
+      <div class="stage-n">02 — BUILD</div>
+      <div class="stage-name">Systems</div>
+      <div class="stage-body">We build to the scope defined in the Sprint. Fixed price against what we actually found. No assumptions, no surprises. You own everything at close — documented and structured.</div>
+      <ul class="stage-list">
+        <li>Revenue Intelligence systems</li>
+        <li>CRM configuration and workflows</li>
+        <li>AI automation on your data</li>
+        <li>Full IP transfer at handoff</li>
+      </ul>
+    </div>
+    <div class="stage">
+      <div class="stage-n">03 — RUNTIME</div>
+      <div class="stage-name">Operations</div>
+      <div class="stage-body">Corridor Labs runs as your embedded Revenue Intelligence team. Weekly cadence. Active backlog. Systems tuned as your business evolves. New builds added as the platform matures.</div>
+      <ul class="stage-list">
+        <li>Weekly operating cadence</li>
+        <li>System tuning and expansion</li>
+        <li>New automation builds</li>
+        <li>Senior accountability on every call</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE BUILD -->
+<section id="systems">
+  <div class="label reveal">What We Build</div>
+  <h2 class="reveal">Systems that make your motion<br><i>faster and sharper.</i></h2>
+  <div class="builds reveal">
+    <div class="build">
+      <span class="build-tag">Tender &amp; Proposal</span>
+      <div class="build-name">Tender Intelligence</div>
+      <div class="build-body">Automated monitoring across your target portals. Specs parsed, quantities extracted, bids qualified. Your team reviews a brief and makes a call — not a half-day of searches.</div>
+      <ul class="build-outs">
+        <li>All portals monitored — no missed bids</li>
+        <li>Specs and quantities extracted automatically</li>
+        <li>Qualification brief in minutes, not hours</li>
+      </ul>
+    </div>
+    <div class="build">
+      <span class="build-tag">Proposal Acceleration</span>
+      <div class="build-name">Proposal Engine</div>
+      <div class="build-body">Your historical wins, designs, and contracts put to work. New jobs pattern-matched against your best comparable. First-draft proposals with pricing reference — same day, not two weeks.</div>
+      <ul class="build-outs">
+        <li>Historical wins indexed and searchable</li>
+        <li>New jobs matched to comparable past work</li>
+        <li>First drafts with pricing reference, same day</li>
+      </ul>
+    </div>
+    <div class="build">
+      <span class="build-tag">Pipeline &amp; CRM</span>
+      <div class="build-name">Revenue Operations</div>
+      <div class="build-body">CRM configured for your motion, not a demo environment. Reps accountable. Management with visibility. GP metrics connected to activity. The operating layer your team has been missing.</div>
+      <ul class="build-outs">
+        <li>CRM built around how you actually sell</li>
+        <li>GP metrics connected to pipeline data</li>
+        <li>Management dashboards with real signal</li>
+      </ul>
+    </div>
+    <div class="build">
+      <span class="build-tag">AI Automation</span>
+      <div class="build-name">Context-Trained AI</div>
+      <div class="build-body">AI that knows your pricing, your customers, and how you win. Built on your data, licensed directly with Anthropic. If we stopped working together, it keeps running.</div>
+      <ul class="build-outs">
+        <li>AI trained on your deal history and contracts</li>
+        <li>Licensed directly with Anthropic — you own it</li>
+        <li>Compounds in value with every engagement</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="proof-section" id="proof" style="background: var(--ink-2);">
+  <div class="label reveal">Client Results</div>
+  <h2 class="reveal">What operators say<br>after the <i>Sprint.</i></h2>
+  <div class="proof-grid reveal">
+    <div class="proof-card">
+      <div class="proof-quote">"Placeholder — real quote from client goes here once approved."</div>
+      <div class="proof-meta">
+        <div class="proof-name">NAME, TITLE</div>
+        <div class="proof-co">Company · Industry</div>
+        <div class="proof-outcome">↑ Outcome metric here</div>
+      </div>
+    </div>
+    <div class="proof-card">
+      <div class="proof-quote">"Placeholder — real quote from client goes here once approved."</div>
+      <div class="proof-meta">
+        <div class="proof-name">NAME, TITLE</div>
+        <div class="proof-co">Company · Industry</div>
+        <div class="proof-outcome">↑ Outcome metric here</div>
+      </div>
+    </div>
+    <div class="proof-card">
+      <div class="proof-quote">"Placeholder — real quote from client goes here once approved."</div>
+      <div class="proof-meta">
+        <div class="proof-name">NAME, TITLE</div>
+        <div class="proof-co">Company · Industry</div>
+        <div class="proof-outcome">↑ Outcome metric here</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO -->
+<section class="who-section" id="who">
+  <div class="who-wrap">
+    <div class="who-left reveal">
+      <div class="label">Who It's For</div>
+      <h2>Built for operators<br>growing through <i>complexity.</i></h2>
+      <p>Mid-market B2B at $10–50M, scaling faster than your revenue infrastructure. You need a five-person RevOps capability without hiring five people.</p>
+      <p>Running HubSpot or Dynamics and it's not doing what it promised — you're the right client. Proposals taking weeks when they shouldn't — you're the right client.</p>
+    </div>
+    <div class="reveal" style="padding-top: 64px;">
+      <ul class="fits">
+        <li class="fit">
+          <div><div class="fit-name">MANUFACTURER / INDUSTRIAL</div><div class="fit-desc">Complex quoting, long cycles, estimating bottlenecks</div></div>
+          <span class="fit-tag">Core Fit</span>
+        </li>
+        <li class="fit">
+          <div><div class="fit-name">FREIGHT &amp; LOGISTICS / 3PL</div><div class="fit-desc">GP-per-rep visibility, CRM accountability gaps</div></div>
+          <span class="fit-tag">Core Fit</span>
+        </li>
+        <li class="fit">
+          <div><div class="fit-name">ENGINEERING &amp; TECHNICAL SERVICES</div><div class="fit-desc">Tender-heavy, proposal-intensive, relationship-driven</div></div>
+          <span class="fit-tag">Core Fit</span>
+        </li>
+        <li class="fit">
+          <div><div class="fit-name">DISTRIBUTION &amp; SUPPLY CHAIN</div><div class="fit-desc">Pricing complexity, rep accountability, pipeline opacity</div></div>
+          <span class="fit-tag">Strong Fit</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- OWN -->
+<section class="own-section">
+  <div class="label reveal">What You Own</div>
+  <h2 class="reveal">You own <i>everything</i> we build.</h2>
+  <div class="own-grid reveal">
+    <div class="own-card">
+      <span class="own-icon">⬡</span>
+      <div class="own-title">Your AI Environment</div>
+      <div class="own-body">Licensed directly with Anthropic — not through us. If we stopped working together, your systems keep running. That's the model.</div>
+    </div>
+    <div class="own-card">
+      <span class="own-icon">◈</span>
+      <div class="own-title">All Documentation</div>
+      <div class="own-body">Every system documented and handed off. Playbooks, configs, automation logic — your team can operate it without us if they choose to.</div>
+    </div>
+    <div class="own-card">
+      <span class="own-icon">◎</span>
+      <div class="own-title">Your Data, Yours Alone</div>
+      <div class="own-body">Your deal history, contracts, and knowledge files never leave your control. We access what's needed to build. Output is yours at every stage.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" style="border-top: 1px solid var(--line);">
+  <div class="cta-glow"></div>
+  <div class="reveal">
+    <h2>Start with a <i>Sprint.</i></h2>
+    <p>Three weeks. A working demo on your data. A fixed-scope build proposal on the table.</p>
+    <a href="https://cal.com/corridor" class="btn">Book a Sprint Call</a>
+  </div>
+</section>
+
+<footer>
+  <div class="f-logo">CORRIDOR<b>.</b>LABS INC.</div>
+  <ul class="f-links">
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#proof">Clients</a></li>
+    <li><a href="#who">Who It's For</a></li>
+    <li><a href="https://cal.com/corridor">Book a Call</a></li>
+  </ul>
+  <div class="f-copy">© 2026 Corridor Labs Inc.</div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 30));
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); } });
+}, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
