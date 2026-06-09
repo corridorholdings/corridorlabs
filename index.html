@@ -46,8 +46,8 @@ nav.scrolled { background: rgba(13,13,13,0.96); backdrop-filter: blur(20px); bor
 
 /* HERO */
 .hero {
-  min-height: 100vh; display: flex; align-items: center;
-  padding: 120px 52px 80px; position: relative; overflow: hidden;
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 120px 52px 80px; position: relative; overflow: hidden; text-align: center;
 }
 .hero-grid {
   position: absolute; inset: 0;
@@ -55,7 +55,7 @@ nav.scrolled { background: rgba(13,13,13,0.96); backdrop-filter: blur(20px); bor
   background-size: 64px 64px; opacity: 0.2;
   mask-image: radial-gradient(ellipse 60% 80% at 35% 50%, black 10%, transparent 70%);
 }
-.hero-inner { position: relative; z-index: 2; max-width: 780px; }
+.hero-inner { position: relative; z-index: 2; max-width: 780px; margin: 0 auto; }
 
 h1 {
   font-family: 'Fraunces', serif;
@@ -66,7 +66,7 @@ h1 {
 h1 i { font-style: italic; color: var(--red); }
 
 .hero-sub {
-  margin-top: 32px; font-size: 19px; color: var(--light); line-height: 1.6; max-width: 500px;
+  margin-top: 32px; font-size: 19px; color: var(--light); line-height: 1.6; max-width: 500px; margin-left: auto; margin-right: auto;
   opacity: 0; animation: up 1s 0.3s forwards;
 }
 .hero-sub b { color: var(--cream-dim); font-weight: 400; }
@@ -195,7 +195,7 @@ footer { border-top: 1px solid var(--line); padding: 32px 52px; display: flex; a
 <body>
 
 <nav id="nav">
-  <a href="#" class="logo" style="display:flex;align-items:center;gap:10px;"><img src="favicon.png" style="height:28px;width:28px;filter:invert(1);flex-shrink:0;" alt="Corridor Labs">CORRIDOR<b>.</b>LABS</a>
+  <a href="#" class="logo" style="display:flex;align-items:center;gap:10px;"><img src="favicon.png" style="height:40px;width:40px;filter:invert(1);flex-shrink:0;" alt="Corridor Labs">CORRIDOR<b>.</b>LABS</a>
   <a href="https://cal.com/corridor" class="nav-cta">Book a Sprint</a>
 </nav>
 
